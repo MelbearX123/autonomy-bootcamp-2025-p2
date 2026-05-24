@@ -27,7 +27,9 @@ class HeartbeatSender:
             return False, None
         return True, HeartbeatSender(cls.__private_key, connection, local_logger)
 
-    def __init__(self, key: object, connection: mavutil.mavfile, local_logger: logger.Logger) -> None:
+    def __init__(
+        self, key: object, connection: mavutil.mavfile, local_logger: logger.Logger
+    ) -> None:
         assert key is HeartbeatSender.__private_key, "Use create() method"
 
         # Do any intializiation here
