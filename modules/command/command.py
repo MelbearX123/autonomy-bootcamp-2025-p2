@@ -65,10 +65,7 @@ class Command:  # pylint: disable=too-many-instance-attributes
         self.total_vz = 0.0
         self.time = 0
 
-    def run(
-        self,
-        telemetry_data: telemetry.TelemetryData
-    ) -> "list[str]":
+    def run(self, telemetry_data: telemetry.TelemetryData) -> "list[str]":
         """
         Make a decision based on received telemetry data.
         """
@@ -82,7 +79,7 @@ class Command:  # pylint: disable=too-many-instance-attributes
         self.time += 1
 
         avg_vx = self.total_vx / self.time
-        avg_vy = self.total_vy /self.time
+        avg_vy = self.total_vy / self.time
         avg_vz = self.total_vz / self.time
 
         self.local_logger.info(f"Average Velocity: {avg_vx}, {avg_vy}, {avg_vz}")
@@ -105,7 +102,7 @@ class Command:  # pylint: disable=too-many-instance-attributes
                 0,
                 0,
                 0,
-                self.target.z
+                self.target.z,
             )
             self.local_logger.info("Altitude changed")
             message.append(f"CHANGE_ALTITUDE: {delta_z}")
@@ -113,7 +110,9 @@ class Command:  # pylint: disable=too-many-instance-attributes
         # Adjust direction (yaw) using MAV_CMD_CONDITION_YAW (115). Must use relative angle to current state
         # String to return to main: "CHANGING_YAW: {degree you changed it by in range [-180, 180]}"
         # Positive angle is counter-clockwise as in a right handed system
-        target_angle = math.atan2(self.target.y - telemetry_data.y, self.target.x - telemetry_data.x)
+        target_angle = math.atan2(
+            self.target.y - telemetry_data.y, self.target.x - telemetry_data.x
+        )
         delta_yaw = target_angle - telemetry_data.yaw
         delta_yaw = math.degrees(delta_yaw)
 
@@ -124,21 +123,11 @@ class Command:  # pylint: disable=too-many-instance-attributes
 
         if abs(delta_yaw) > 5:
             self.connection.mav.command_long_send(
-                1,
-                0,
-                mavutil.mavlink.MAV_CMD_CONDITION_YAW,
-                0,
-                abs(delta_yaw),
-                5,
-                0,
-                1,
-                0,
-                0,
-                0
+                1, 0, mavutil.mavlink.MAV_CMD_CONDITION_YAW, 0, abs(delta_yaw), 5, 0, 1, 0, 0, 0
             )
             self.local_logger.info("Yaw changed")
             message.append(f"CHANGE_YAW: {delta_yaw}")
-        
+
         return message
 
 

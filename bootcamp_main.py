@@ -88,39 +88,47 @@ def main() -> int:
     mp_manager = mp.Manager()
 
     # Create queues
-    heartbeat_receiver_output_queue = queue_proxy_wrapper.QueueProxyWrapper(mp_manager, HEARTBEAT_RECEIVER_OUTPUT_QUEUE_MAX_SIZE)
-    telemetry_output_queue = queue_proxy_wrapper.QueueProxyWrapper(mp_manager, TELEMETRY_OUTPUT_QUEUE_MAX_SIZE)
-    command_output_queue = queue_proxy_wrapper.QueueProxyWrapper(mp_manager, COMMAND_OUTPUT_QUEUE_MAX_SIZE)
-    command_input_queue = queue_proxy_wrapper.QueueProxyWrapper(mp_manager, COMMAND_INPUT_QUEUE_MAX_SIZE)
+    heartbeat_receiver_output_queue = queue_proxy_wrapper.QueueProxyWrapper(
+        mp_manager, HEARTBEAT_RECEIVER_OUTPUT_QUEUE_MAX_SIZE
+    )
+    telemetry_output_queue = queue_proxy_wrapper.QueueProxyWrapper(
+        mp_manager, TELEMETRY_OUTPUT_QUEUE_MAX_SIZE
+    )
+    command_output_queue = queue_proxy_wrapper.QueueProxyWrapper(
+        mp_manager, COMMAND_OUTPUT_QUEUE_MAX_SIZE
+    )
+    command_input_queue = queue_proxy_wrapper.QueueProxyWrapper(
+        mp_manager, COMMAND_INPUT_QUEUE_MAX_SIZE
+    )
 
     # Create worker properties for each worker type (what inputs it takes, how many workers)
     # Heartbeat sender
     result, heartbeat_sender_worker_properties = worker_manager.WorkerProperties.create(
-        count = HEARTBEAT_SENDER_WORKER_COUNT,
-        target = heartbeat_sender_worker.heartbeat_sender_worker,
+        count=HEARTBEAT_SENDER_WORKER_COUNT,
+        target=heartbeat_sender_worker.heartbeat_sender_worker,
         work_arguments=(connection,),
         input_queues=[],
         output_queues=[],
         controller=controller,
-        local_logger=main_logger
+        local_logger=main_logger,
     )
 
     if not result:
         print("Failed to create arguments for hearbeat_sender_worker")
         return -1
-    
+
     # Get Pylance to stop complaining
     assert heartbeat_sender_worker_properties is not None
 
     # Heartbeat receiver
     result, heartbeat_receiver_worker_properties = worker_manager.WorkerProperties.create(
-        count = HEARTBEAT_RECEIVER_WORKER_COUNT,
-        target = heartbeat_receiver_worker.heartbeat_receiver_worker,
+        count=HEARTBEAT_RECEIVER_WORKER_COUNT,
+        target=heartbeat_receiver_worker.heartbeat_receiver_worker,
         work_arguments=(connection,),
         input_queues=[],
         output_queues=[heartbeat_receiver_output_queue],
         controller=controller,
-        local_logger=main_logger
+        local_logger=main_logger,
     )
 
     # Get Pylance to stop complaining
@@ -132,37 +140,37 @@ def main() -> int:
 
     # Telemetry
     result, telemetry_worker_properties = worker_manager.WorkerProperties.create(
-        count = TELEMETRY_WORKER_COUNT,
-        target = telemetry_worker.telemetry_worker,
+        count=TELEMETRY_WORKER_COUNT,
+        target=telemetry_worker.telemetry_worker,
         work_arguments=(connection,),
         input_queues=[],
         output_queues=[telemetry_output_queue],
         controller=controller,
-        local_logger=main_logger
+        local_logger=main_logger,
     )
 
     if not result:
         print("Failed to create arguments for telemetry_worker")
         return -1
-    
+
     # Get Pylance to stop complaining
     assert telemetry_worker_properties is not None
 
     # Command
     result, command_worker_properties = worker_manager.WorkerProperties.create(
-        count = COMMAND_WORKER_COUNT,
-        target = command_worker.command_worker,
+        count=COMMAND_WORKER_COUNT,
+        target=command_worker.command_worker,
         work_arguments=(connection,),
         input_queues=[command_input_queue],
         output_queues=[command_output_queue],
         controller=controller,
-        local_logger=main_logger
+        local_logger=main_logger,
     )
 
     if not result:
         print("Failed to create arguments for command_worker")
         return -1
-    
+
     # Get Pylance to stop complaining
     assert command_worker_properties is not None
 
@@ -177,7 +185,7 @@ def main() -> int:
     if not result:
         print("Failed to create manager for heartbeat sender")
         return -1
-    
+
     assert heartbeat_sender_manager is not None
     worker_managers.append(heartbeat_sender_manager)
 
@@ -189,7 +197,7 @@ def main() -> int:
     if not result:
         print("Failed to create manager for heartbeat receiver")
         return -1
-    
+
     assert heartbeat_receiver_manager is not None
     worker_managers.append(heartbeat_receiver_manager)
 
@@ -201,7 +209,7 @@ def main() -> int:
     if not result:
         print("Failed to create manager for telemetry")
         return -1
-    
+
     assert telemetry_manager is not None
     worker_managers.append(telemetry_manager)
 
@@ -213,7 +221,7 @@ def main() -> int:
     if not result:
         print("Failed to create manager for command")
         return -1
-    
+
     assert command_manager is not None
     worker_managers.append(command_manager)
 

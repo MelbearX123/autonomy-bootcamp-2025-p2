@@ -50,8 +50,7 @@ def heartbeat_sender_worker(
     # =============================================================================================
     # Instantiate class object (heartbeat_sender.HeartbeatSender)
     success, heartbeat_sender_instance = heartbeat_sender.HeartbeatSender.create(
-        connection,
-        local_logger
+        connection, local_logger
     )
 
     if not success:

@@ -19,7 +19,7 @@ from ..common.modules.logger import logger
 def telemetry_worker(
     connection: mavutil.mavfile,
     controller: worker_controller.WorkerController,
-    output_queue: queue_proxy_wrapper.QueueProxyWrapper
+    output_queue: queue_proxy_wrapper.QueueProxyWrapper,
     # Add other necessary worker arguments here
 ) -> None:
     """
@@ -70,8 +70,6 @@ def telemetry_worker(
             continue
 
         output_queue.queue.put(data)
-        
-
 
 
 # =================================================================================================

@@ -21,7 +21,7 @@ def command_worker(
     target: command.Position,
     controller: worker_controller.WorkerController,
     input_queue: queue_proxy_wrapper.QueueProxyWrapper,
-    output_queue: queue_proxy_wrapper.QueueProxyWrapper
+    output_queue: queue_proxy_wrapper.QueueProxyWrapper,
     # Add other necessary worker arguments here
 ) -> None:
     """
@@ -55,11 +55,7 @@ def command_worker(
     #                          ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
     # =============================================================================================
     # Instantiate class object (command.Command)
-    success, command_instance = command.Command.create(
-        connection,
-        target,
-        local_logger
-    )
+    success, command_instance = command.Command.create(connection, target, local_logger)
 
     if not success:
         local_logger.error("Failed to create command instance")

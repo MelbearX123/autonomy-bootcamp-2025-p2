@@ -108,7 +108,9 @@ class Telemetry:
         local_position = None
         attitude = None
         while time.time() - start_time < 1:
-            message = self.connection.recv_match(type=["LOCAL_POSITION_NED", "ATTITUDE"], blocking=True, timeout=1)
+            message = self.connection.recv_match(
+                type=["LOCAL_POSITION_NED", "ATTITUDE"], blocking=True, timeout=1
+            )
             if message is None:
                 break
             # Read MAVLink message LOCAL_POSITION_NED (32)
@@ -124,7 +126,7 @@ class Telemetry:
         if not local_position or not attitude:
             self.local_logger.warning("Missing either local_position_NED or attitude, restart")
             return False, None
-        
+
         time_since_boot = max(local_position.time_boot_ms, attitude.time_boot_ms)
         telemetry_data = TelemetryData(
             time_since_boot=time_since_boot,
@@ -139,11 +141,10 @@ class Telemetry:
             yaw=attitude.yaw,
             roll_speed=attitude.rollspeed,
             pitch_speed=attitude.pitchspeed,
-            yaw_speed=attitude.yawspeed
+            yaw_speed=attitude.yawspeed,
         )
 
         return True, telemetry_data
-        
 
 
 # =================================================================================================
