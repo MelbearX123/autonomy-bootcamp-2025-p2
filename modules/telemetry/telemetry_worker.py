@@ -18,13 +18,17 @@ from ..common.modules.logger import logger
 # =================================================================================================
 def telemetry_worker(
     connection: mavutil.mavfile,
-    args,  # Place your own arguments here
+    controller: worker_controller.WorkerController,
+    output_queue: queue_proxy_wrapper.QueueProxyWrapper
     # Add other necessary worker arguments here
 ) -> None:
     """
     Worker process.
 
     args... describe what the arguments are
+    connection: MAVlink connection
+    controller: connection with the main process
+    output_queue: sends altitude and local position messages to main process
     """
     # =============================================================================================
     #                          ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
@@ -47,8 +51,27 @@ def telemetry_worker(
     #                          ↓ BOOTCAMPERS MODIFY BELOW THIS COMMENT ↓
     # =============================================================================================
     # Instantiate class object (telemetry.Telemetry)
+    success, telemetry_instance = telemetry.Telemetry.create(
+        connection,
+        local_logger,
+    )
+
+    if not success:
+        local_logger.error("Failed to create telemetry instance")
+        return
 
     # Main loop: do work.
+    while not controller.is_exit_requested():
+        controller.check_pause()
+        success, data = telemetry_instance.run()
+
+        if not success:
+            local_logger.warning("Failed to create instance of telemetry data")
+            continue
+
+        output_queue.queue.put(data)
+        
+
 
 
 # =================================================================================================

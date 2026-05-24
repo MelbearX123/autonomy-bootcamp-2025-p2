@@ -1,0 +1,7 @@
+21:41:29: [INFO] [C:\Users\Steal\projects\WARG\autonomy-bootcamp-2025-p2\modules\telemetry\telemetry_worker.py | telemetry_worker | 48] Logger initialized
+21:41:34: [WARNING] [C:\Users\Steal\projects\WARG\autonomy-bootcamp-2025-p2\modules\telemetry\telemetry.py | run | 125] Missing either local_position_NED or attitude, restart
+21:41:34: [WARNING] [C:\Users\Steal\projects\WARG\autonomy-bootcamp-2025-p2\modules\telemetry\telemetry_worker.py | telemetry_worker | 69] Failed to create instance of telemetry data
+21:41:35: [WARNING] [C:\Users\Steal\projects\WARG\autonomy-bootcamp-2025-p2\modules\telemetry\telemetry.py | run | 125] Missing either local_position_NED or attitude, restart
+21:41:35: [WARNING] [C:\Users\Steal\projects\WARG\autonomy-bootcamp-2025-p2\modules\telemetry\telemetry_worker.py | telemetry_worker | 69] Failed to create instance of telemetry data
+21:41:42: [WARNING] [C:\Users\Steal\projects\WARG\autonomy-bootcamp-2025-p2\modules\telemetry\telemetry.py | run | 125] Missing either local_position_NED or attitude, restart
+21:41:42: [WARNING] [C:\Users\Steal\projects\WARG\autonomy-bootcamp-2025-p2\modules\telemetry\telemetry_worker.py | telemetry_worker | 69] Failed to create instance of telemetry data
