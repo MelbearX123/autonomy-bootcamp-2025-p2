@@ -42,6 +42,7 @@ TELEMETRY_WORKER_COUNT = 1
 COMMAND_WORKER_COUNT = 1
 
 # Any other constants
+TARGET = command.Position(10, 10, 10)
 RUNTIME = 100
 # =================================================================================================
 #                            ↑ BOOTCAMPERS MODIFY ABOVE THIS COMMENT ↑
@@ -245,8 +246,8 @@ def main() -> int:
             pass
 
         try:
-            command = command_output_queue.queue.get()
-            main_logger.info(f"Command: {command}")
+            cmd = command_output_queue.queue.get()
+            main_logger.info(f"Command: {cmd}")
         except queue.Empty:
             pass
 
