@@ -74,7 +74,7 @@ def read_queue(
             main_logger.info(str(data))
         except queue.Empty:
             pass
-        except Exception as e:
+        except (OSError, TypeError, AttributeError) as e:
             main_logger.error(f"Exception: {e}")
 
 
