@@ -82,7 +82,7 @@ def read_queue(
             if messages is None:
                 break
             main_logger.info(str(messages))
-        except queue.Empty as e:
+        except queue.Empty:
             pass
         except (OSError, TypeError, AttributeError) as e:
             main_logger.error(f"Exception: {e}")
