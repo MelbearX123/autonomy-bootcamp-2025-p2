@@ -65,7 +65,7 @@ def command_worker(
     while not controller.is_exit_requested():
         controller.check_pause()
 
-        telemetry_data = input_queue.queue.get(timeout=1)
+        telemetry_data = input_queue.queue.get()
         messages = command_instance.run(telemetry_data)
 
         for message in messages:

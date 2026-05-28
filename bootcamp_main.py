@@ -161,7 +161,7 @@ def main() -> int:
     result, command_worker_properties = worker_manager.WorkerProperties.create(
         count=COMMAND_WORKER_COUNT,
         target=command_worker.command_worker,
-        work_arguments=(connection,),
+        work_arguments=(connection, TARGET),
         input_queues=[command_input_queue],
         output_queues=[command_output_queue],
         controller=controller,
@@ -236,9 +236,15 @@ def main() -> int:
     # Continue running for 100 seconds or until the drone disconnects
     start_time = time.time()
 
-    while (time.time() - start_time) < 100:
+    while (time.time() - start_time) < RUNTIME:
         try:
-            status = heartbeat_receiver_output_queue.queue.get()
+             telemetry_data = telemetry_output_queue.queue.get(timeout=0.1)
+             if telemetry_data is not None:
+                 command_input_queue.queue.put(telemetry_data)
+        except queue.Empty:
+             pass
+        try:
+            status = heartbeat_receiver_output_queue.queue.get(timeout=0.1)
             main_logger.info(f"Heartbeat Status: {status}")
             if str(status) == "Disconnected":
                 break
@@ -246,7 +252,7 @@ def main() -> int:
             pass
 
         try:
-            cmd = command_output_queue.queue.get()
+            cmd = command_output_queue.queue.get(timeout=0.1)
             main_logger.info(f"Command: {cmd}")
         except queue.Empty:
             pass
@@ -258,6 +264,7 @@ def main() -> int:
 
     # Fill and drain queues from END TO START
     command_output_queue.fill_and_drain_queue()
+    command_input_queue.fill_and_drain_queue()
     heartbeat_receiver_output_queue.fill_and_drain_queue()
     telemetry_output_queue.fill_and_drain_queue()
 

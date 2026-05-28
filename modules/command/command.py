@@ -97,7 +97,7 @@ class Command:  # pylint: disable=too-many-instance-attributes
                 mavutil.mavlink.MAV_CMD_CONDITION_CHANGE_ALT,
                 0,
                 1,
-                0,
+                0,s
                 0,
                 0,
                 0,
@@ -106,6 +106,8 @@ class Command:  # pylint: disable=too-many-instance-attributes
             )
             self.local_logger.info("Altitude changed")
             message.append(f"CHANGE_ALTITUDE: {delta_z}")
+
+            return message
 
         # Adjust direction (yaw) using MAV_CMD_CONDITION_YAW (115). Must use relative angle to current state
         # String to return to main: "CHANGING_YAW: {degree you changed it by in range [-180, 180]}"
@@ -126,7 +128,7 @@ class Command:  # pylint: disable=too-many-instance-attributes
                 1, 0, mavutil.mavlink.MAV_CMD_CONDITION_YAW, 0, abs(delta_yaw), 5, 0, 1, 0, 0, 0
             )
             self.local_logger.info("Yaw changed")
-            message.append(f"CHANGE_YAW: {delta_yaw}")
+            message.append(f"CHANGING_YAW: {delta_yaw}")
 
         return message
 
