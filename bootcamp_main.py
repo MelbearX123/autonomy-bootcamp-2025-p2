@@ -238,11 +238,11 @@ def main() -> int:
 
     while (time.time() - start_time) < RUNTIME:
         try:
-             telemetry_data = telemetry_output_queue.queue.get(timeout=0.1)
-             if telemetry_data is not None:
-                 command_input_queue.queue.put(telemetry_data)
+            telemetry_data = telemetry_output_queue.queue.get(timeout=0.1)
+            if telemetry_data is not None:
+                command_input_queue.queue.put(telemetry_data)
         except queue.Empty:
-             pass
+            pass
         try:
             status = heartbeat_receiver_output_queue.queue.get(timeout=0.1)
             main_logger.info(f"Heartbeat Status: {status}")

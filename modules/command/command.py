@@ -97,7 +97,7 @@ class Command:  # pylint: disable=too-many-instance-attributes
                 mavutil.mavlink.MAV_CMD_CONDITION_CHANGE_ALT,
                 0,
                 1,
-                0,s
+                0,
                 0,
                 0,
                 0,

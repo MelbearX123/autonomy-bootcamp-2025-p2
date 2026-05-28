@@ -66,6 +66,8 @@ def command_worker(
         controller.check_pause()
 
         telemetry_data = input_queue.queue.get()
+        if telemetry_data is None:
+            break
         messages = command_instance.run(telemetry_data)
 
         for message in messages:
